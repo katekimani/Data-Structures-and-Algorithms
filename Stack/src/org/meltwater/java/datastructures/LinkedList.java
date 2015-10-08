@@ -143,7 +143,7 @@ public class LinkedList<E> {
 	}
 	/**
 	 * Changes the order of the nodes in the list
-	 * O(nlogn)
+	 * O(logN)
 	 */
 	public void reverse(){
 		

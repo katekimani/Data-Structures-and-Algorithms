@@ -80,4 +80,16 @@ public class Stack<E> {
 		} 
 		return false;
 	}
+	
+	public void peek(){
+		
+	}
+	
+	public void isEmpty(){
+		
+	}
+	
+	public void isFull(){
+		
+	}
 }
