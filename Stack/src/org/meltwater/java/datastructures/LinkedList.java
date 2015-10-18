@@ -24,7 +24,7 @@ public class LinkedList<E> {
 	 * @param element - data to be added.
 	 */
 	public void add(Node<E> position, E element){
-		Node<E> newNode = new Node<E>(position, (String) element);
+		Node<E> newNode = new Node(position, (String) element);
 		newNode.next = currentNode.next;
 		currentNode.next = newNode;
 		count++;
@@ -111,7 +111,7 @@ public class LinkedList<E> {
 			currNode = currNode.next;
 		}
 	
-		return headNode.element;
+		return (String) headNode.element;
 	}
 	/**
 	 * Returns the last element added to the list.
@@ -120,7 +120,7 @@ public class LinkedList<E> {
 	 * @return String element.
 	 */
 	public String tail(){
-		return currentNode.element;
+		return (String) currentNode.element;
 	}
 	/**
 	 * Removes the provided element from the list.
