@@ -1,47 +1,51 @@
 package org.meltwater.java.datastructures;
-/*
- * Source code reference: http://pathakalgo.blogspot.in/2012/11/trie-data-structure-implementation-in.html
- */
 
-public class Trie <E extends Comparable>{
-	static Node<?> root;
-	static Node<?> currentNode;
-	static char firstLetter;
-	
-	
-	
-	public static void addWord(String word){
-		if(root == null)
-			root = new Node<Object>('\0', false);
+
+public class Trie {
+
+	char c;
+	Trie[] nodes;
+	boolean isWord;
 		
-		System.out.println("The root value is : " +root.toString());
-		addWord(root, word);
+	public Trie(){
+		this.c = 0;
+		this.nodes = new Trie[26];
+		this.isWord = false;
 	}
 	
-	protected static void addWord(Node<?> rootNode, String word){
-		char[] letters = word.toCharArray();
-		int offset = 97;
-		currentNode = root;
-		
-		for(int i = 0; i < word.length(); i++){
-			if(currentNode.treeLinks[letters[i]-offset] == null)
-				currentNode.treeLinks[letters[i]-offset] = new Node(letters[i], i == word.length()-1 ? true : false);
-			currentNode = currentNode.treeLinks[letters[i]-offset];
+	public void addWord(String word){
+		if(word.length() == 0){
+			this.isWord = true;
+			return;
 		}
+		
+		char letter = word.charAt(0);
+		int index = letter - 'a'; //numerical value of a is 97
+		
+		if(this.nodes[index] == null){
+			this.nodes[index] = new Trie();	
+		}
+		
+		this.nodes[index].addWord(word.substring(1));
+			
 	}
+
 	
-	public static boolean searchDictionary(String word){
-			currentNode = root;
-			int offset = 84;
-			char[] letters = word.toCharArray();
-			System.out.println("The current node value is : "+currentNode);
-			for(int i = 0; i < word.length(); i++){
-				if(currentNode == null){
-					return false;
-				}
-				currentNode = currentNode.treeLinks[letters[i]-offset];
-			}
-			return true;
+	public boolean searchDictionary(String word){
+			
+		if(word.isEmpty())
+		{
+			return this.isWord;
+		}
+		
+		int index = word.toLowerCase().charAt(0) - 'a';
+		if(this.nodes[index] == null)
+		{
+			return false;
+		}
+		
+		return this.nodes[index].searchDictionary(word.substring(1));
+		
 	}
 
 }

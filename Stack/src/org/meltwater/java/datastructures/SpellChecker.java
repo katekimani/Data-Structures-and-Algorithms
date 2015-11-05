@@ -1,92 +1,77 @@
 package org.meltwater.java.datastructures;
-/**
- * Source code reference: http://pathakalgo.blogspot.in/2012/11/trie-data-structure-implementation-in.html
- * 
- * Accepts 2 files from the console input file.txt and dictionary.txt.
- * Checks if the spelling of words in file.txt match what the dictionary.txt contains.
- * Replaces the misspelled words in file.txt with the spelling used in dictionary.txt.
- * Writes the checked and corrected file contents to file-corrected.txt
- * 
- * @author katekimani
- *
- */
 
 import java.io.BufferedReader;
-import java.io.File;
+import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
-
-public class SpellChecker {
-
-	public static String[] readFile(File filename) {
-		BufferedReader readBuffer = null;
-		String[] words ={};	String oneLine;		
-		try {
-			readBuffer = new BufferedReader(new FileReader(filename));
-				while ((oneLine = readBuffer.readLine()) != null) {
-					words = oneLine.split("\\s+");
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					if (readBuffer != null) readBuffer.close();
-				} catch (IOException readException) {
-					readException.printStackTrace();
+public class SpellChecker{
+	
+	public static String[] readFile(String filename) {
+		
+		ArrayList<String> fileContent = new ArrayList<String>();
+		String[] entry;
+		
+		try
+		{
+			BufferedReader fileData = new BufferedReader(new FileReader(filename));
+			
+			while(fileData.readLine() != null)
+			{
+				entry = fileData.readLine().split("\\s+");
+				System.out.println("The entry string is " +Arrays.toString(entry));
+				for(String e : entry)
+				{
+				fileContent.add(e);
 				}
 			}
-		return words;
+			
+			fileData.close();
+		
+		} catch (Exception e)
+		{
+			System.out.println("The while loop has encountered an error : " +e);
 		}
-	
-	
-	public static void fileWrite(String text){
-		try{
-		String filename = "corrected-data.txt";
-		FileWriter data = new FileWriter(filename, true);
-		data.append(text);
-
-		data.flush();
-		data.close();
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
+		
+		String[] returnContent = fileContent.toArray(new String[fileContent.size()]);
+		return returnContent;
+		
 	}
 	
-	public static void main(String[] args) {
+	public static void writeFile(String str) throws Exception{
 		
-		File dataFile = new File("args[0]");
-		File dictWords = new File("args[1]");
-		String correctText ="", correction;
-		boolean found;
-		Node rootNode = Trie.Trie();
+		BufferedWriter fileData = new BufferedWriter(new FileWriter("corrected-data.txt"));
+		if(fileData.equals(null)){
+		fileData.write(str);
+		} else {
+			fileData.append(str);
+		}
+		fileData.close();
+	}
+	
+	public static void main(String[] args) throws Exception{
 		
-		String[] dictionary = readFile(dictWords);
-		for(String s : dictionary){
-			Trie.addWord(rootNode, s);
+		String dFile = args[0];
+		String dictFile = args[1];
+		Trie dictionary = new Trie();
+		
+		String[] array = readFile(dictFile);
+		for(String s : array){
+			dictionary.addWord(s);
 		}
 		
-		String[] words = readFile(dataFile);
-		for(String s : words){
-
-			if(Trie.searchDictionary(s)){
-				correctText += s +" ";
-			}else{
-				int offset = s.length()-1;
-				String str = s.substring(0, offset);
-				found = Trie.searchDictionary(str);
-				if(found){
-					correction = s.replace(s,str);
-					correctText += correction +" ";
-				} else {
-					correctText += "noMatch ";
-				}
+		String[] arrayData = readFile(dFile);
+		for(String add : arrayData){
+			boolean x = dictionary.searchDictionary(add);
+			System.out.println("The word searched is : "+add + " The return value is : "+x);
+			if(!x){
+				System.out.println("Not in the dictionary");
+			} else {
+				writeFile(add);
+				System.out.println("The word exists : " +add);
 			}
 		}
-		 fileWrite(correctText);
-		 
-		
-					
 	}
 }
